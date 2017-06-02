@@ -2,25 +2,30 @@
 'use strict';
 
 angular.module('ShoppingListApp', [])
-.controller('ShoppingListAddController', ShoppingListAddController)
-.controller('ShoppingListShowController', ShoppingListShowController)
-.service('ShoppingListService', ShoppingListService);
+.controller('ToBuyController', ToBuyShoppingListController)
+.controller('AlreadyBoughtController', AlreadyBuyShoppingListController)
+.service('ShoppingListCheckOffService', ShoppingListCheckOffService);
 
-ShoppingListAddController.$inject = ['ShoppingListService'];
-function ShoppingListAddController(ShoppingListService) {
-  var itemAdder = this;
+ToBuyController.$inject = ['ShoppingListCheckOffService'];
+function ToBuyController(ShoppingListCheckOffService) {
 
-  itemAdder.itemName = "";
-  itemAdder.itemQuantity = "";
+  var list1 = this;
 
-  itemAdder.addItem = function () {
-    ShoppingListService.addItem(itemAdder.itemName, itemAdder.itemQuantity);
-  }
+  list1.items = ShoppingListCheckOffService.getItems();
+
+
+  list.boughtItem = function (list1.itemName, list1.itemQuantity, itemIndex) {
+    if (list1.length > 0 ){
+      ShoppingListCheckOffService.boughtItem(list1.itemName, list1.itemQuantity, itemIndex);
+    }else{
+      throw new Error ("Everything is bought!");
+    }
+  };
 }
 
 
-ShoppingListShowController.$inject = ['ShoppingListService'];
-function ShoppingListShowController(ShoppingListService) {
+AlreadyBoughtController.$inject = ['ShoppingListCheckOffService'];
+function AlreadyBoughtController(ShoppingListCheckOffService) {
   var showList = this;
 
   showList.items = ShoppingListService.getItems();
@@ -31,22 +36,32 @@ function ShoppingListShowController(ShoppingListService) {
 }
 
 
-function ShoppingListService() {
+function ShoppingListCheckOffService() {
   var service = this;
 
+  var buy = [];
   // List of shopping items
-  var items = [];
+  //var items = [];
 
-  service.addItem = function (itemName, quantity) {
+  var items = [
+        { name: "cookies", quantity: 10 },
+        { name: "coco", quantity: 8 },
+        { name: "biscuit", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 },
+        { name: "cookies", quantity: 10 }];
+
+  service.boughtItem = function (itemName, quantity，itemIndex) {
     var item = {
-      name: itemName,
-      quantity: quantity
-    };
-    items.push(item);
-  };
-
-  service.removeItem = function (itemIdex) {
-    items.splice(itemIdex, 1);
+        name: itemName,
+        quantity: quantity
+      };
+    buy.push(item);
+    items.splice(itemIndex, 1);
   };
 
   service.getItems = function () {
